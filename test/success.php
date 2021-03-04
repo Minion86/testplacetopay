@@ -1,8 +1,16 @@
 <?php
+session_start();
+require_once("dbcontroller.php");
+$db_handle = new DBController();
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
+$db_handle->execute("INSERT INTO ORDERS (customer_name,customer_email,customer_mobile,status, created_at,updated_at,reference)values ('','','','PAID',now(),now(),'" . $_GET['reference'] . "')");
+unset($_SESSION["cart_item"]);
+?>
+<link href="style.css" type="text/css" rel="stylesheet" />
+<div class="no-records">Compra realizada exitosamente</div>
+<br/>
+<a id="btnCheckout" href="index.php">home</a>
+<?php
+?>
 

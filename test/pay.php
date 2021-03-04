@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/bootstrap.php';
 session_start();
 //$placetopay = new Dnetix\Redirection\PlacetoPay([
@@ -121,8 +122,8 @@ if (!empty($_SESSION["cart_item"])) {
         'expiration' => date('c', strtotime('+1 hour')),
         'ipAddress' => '127.0.0.1',
         'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',
-        'returnUrl' => 'http://localhost/test/success.php',
-        'cancelUrl' => 'http://localhost/test/',
+        'returnUrl' => 'http://localhost/test/success.php?reference='.$reference,
+        'cancelUrl' => 'http://localhost/test/cancel.php?reference='.$reference,
         'skipResult' => false,
         'noBuyerFill' => false,
         'captureAddress' => false,
@@ -132,23 +133,37 @@ if (!empty($_SESSION["cart_item"])) {
     try {
         $placetopay = placetopay();
         $response = $placetopay->request($request);
+        header('Content-type: application/json');
+        $data = (object) [
+                    'msg' => 'Ok',
+                    'code' => 1,
+                    'data' => $response];
+        echo json_encode($data);
 
-        if ($response->isSuccessful()) {
 
-            header("Location: " . $response->processUrl());
-            die();
-        } else {
-            // There was some error so check the message
-            $response->status()->message();
-        }
-        var_dump($response);
+//        if ($response->isSuccessful()) {
+//
+//            echo $response;
+//           // header("Location: " . $response->processUrl());
+//            //die();
+//        } else {
+//            // There was some error so check the message
+//            $response->status()->message();
+//        }
+        // var_dump($response);
     } catch (Exception $e) {
-        var_dump($e->getMessage());
+        $data = (object) [
+                    'msg' => $e->getMessage(),
+                    'code' => 2];
+        header('Content-type: application/json');
+        echo json_encode($data);
+        //var_dump($e->getMessage());
     }
 } else {
-    ?>
-    <link href="style.css" type="text/css" rel="stylesheet" />
-    <div class="no-records">El carrito está vacío</div>
-    <?php
+    $data = (object) [
+                'msg' => 'El carrito está vacío',
+                'code'=> 2];
+    header('Content-type: application/json');
+    echo json_encode($data);
 }
 ?>
