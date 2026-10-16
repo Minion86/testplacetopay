@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/test"
+    schedule:
+      interval: "weekly"
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns: ["*"]
