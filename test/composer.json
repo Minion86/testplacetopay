@@ -1,5 +1,5 @@
 {
     "require": {
-        "dnetix/redirection": "^1.0"
+        "dnetix/redirection": "^2.1"
     }
 }
